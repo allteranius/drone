@@ -14,25 +14,26 @@ import java.util.UUID;
 @RestController
 public class DroneController {
 
-
+    @Autowired
+    DroneService droneService;
 
     @PostMapping("/drone")
     public Long createDrone(@RequestBody CreateDroneDto createDroneDto){
-        return null;
+        return droneService.createDrone(createDroneDto);
     }
     @PutMapping("/drone_model")
     public boolean createDroneModel(@RequestBody CreateModelDto createModelDto){
-        return false;
+        return droneService.addDroneModel(createModelDto);
     }
 
     @GetMapping("/drone/{id}")
     public DroneDto getDrone(@PathVariable("id") Long id){
-        return null;
+        return droneService.getDrone(id);
     }
 
     @GetMapping("/find_drone")
     public List<DroneDto> findDroneForOrder(@RequestParam int weight){
-        return null;
+        return droneService.findSuitedDrone(weight);
     }
 
 }
