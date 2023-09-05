@@ -6,5 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DroneRepository extends ListCrudRepository<Drone, Long> {
-    List<Drone> findByModelCarryingWeightGreaterThanEqual(float weight);
+    List<Drone> findByModelCarryingWeightGreaterThanEqualAndBatteryStateGreaterThanAndOrderIdIsNull(float weight, int batteryState);
+    List<Drone> findByBatteryStateLessThanEqual(int batteryState);
 }

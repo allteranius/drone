@@ -3,6 +3,7 @@ package allteranius.demo.drone.web;
 import allteranius.demo.drone.dto.CreateDroneDto;
 import allteranius.demo.drone.dto.CreateModelDto;
 import allteranius.demo.drone.dto.DroneDto;
+import allteranius.demo.drone.dto.StartOrderDto;
 import allteranius.demo.drone.services.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,11 @@ public class DroneController {
     @GetMapping("/find_drone")
     public List<DroneDto> findDroneForOrder(@RequestParam int weight){
         return droneService.findSuitedDrone(weight);
+    }
+
+    @PostMapping("/start_order")
+    public boolean startOrder(@RequestBody StartOrderDto startOrderDto){
+        return droneService.startOrder(startOrderDto);
     }
 
 }

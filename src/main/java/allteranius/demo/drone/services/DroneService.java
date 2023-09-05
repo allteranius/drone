@@ -3,6 +3,8 @@ package allteranius.demo.drone.services;
 import allteranius.demo.drone.dto.CreateDroneDto;
 import allteranius.demo.drone.dto.CreateModelDto;
 import allteranius.demo.drone.dto.DroneDto;
+import allteranius.demo.drone.dto.StartOrderDto;
+import allteranius.demo.drone.exceptions.DroneIsNotAvailable;
 import allteranius.demo.drone.exceptions.DroneModelNotExists;
 import allteranius.demo.drone.exceptions.DroneNotFound;
 import allteranius.demo.drone.repositories.Drone;
@@ -56,9 +58,26 @@ public class DroneService {
         return mapDrone(drone.get());
     }
 
+    public boolean startOrder(StartOrderDto startOrderDto) {
+        var drone = droneRepository.findById(startOrderDto.droneId());
+        if (drone.isPresent()){
+            Drone droneEntity = drone.get();
+            if(droneEntity.getOrderId() == null
+                    && droneEntity.getBatteryState() > 25
+                    && droneEntity.getModel().getCarryingWeight()> startOrderDto.weight()) {
+                droneEntity.setOrderId(startOrderDto.orderId());
+                droneRepository.save(droneEntity);
+                return true;
+            } else {
+                throw new DroneIsNotAvailable();
+            }
+        }
+        throw new DroneNotFound();
+    }
+
     public List<DroneDto> findSuitedDrone(int weight) {
         return droneRepository
-                .findByModelCarryingWeightGreaterThanEqual(weight)
+                .findByModelCarryingWeightGreaterThanEqualAndBatteryStateGreaterThanAndOrderIdIsNull(weight, 25)
                 .stream()
                 .map(this::mapDrone)
                 .toList();
