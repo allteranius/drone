@@ -3,13 +3,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.0-M1'
     id 'io.spring.dependency-management' version '1.1.2'
+    id 'com.bmuschko.docker-spring-boot-application' version '9.4.0'
 }
 
 group = 'allteranius.demo'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = '21'
 }
 
 repositories {
@@ -27,3 +28,16 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:21-jdk'
+        ports = [9090, 8080]
+        images = ['drone:0.0.2', 'drone:latest']
+        jvmArgs = ['-Dspring.profiles.active=production', '-Xmx2048m']
+    }
+}
+
+
+
